@@ -26,7 +26,7 @@ app.get("/api/cabeza", (req, res) => {
         tipo: "img",
         path: "/recursos/cabeza.jpg"
       },
-      {
+      { 
         tipo: "p",
         texto: "Principales estructuras de la cabeza:"
       },
