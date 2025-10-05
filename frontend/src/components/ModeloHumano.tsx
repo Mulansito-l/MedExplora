@@ -27,27 +27,31 @@ export default function ModeloHumano() {
       )}
 
       <div
-        className={`${styles.canvasContainer} ${
+        className={`${styles.wrapper} ${
           articulo ? styles.hidden : styles.visible
         }`}
       >
-        <Canvas camera={{ position: [0, 0, 1], fov: 50 }}>
-          <ambientLight intensity={1.8} />
-          <pointLight position={[10, 10, 10]} />
+        <h1 className={styles.titulo}>MedExplora UABC</h1>
 
-          <Suspense fallback={null}>
-            <Modelo3D onParteClick={handleClick} />
-          </Suspense>
+        <div className={styles.canvasContainer}>
+          <Canvas camera={{ position: [0, 0, 1], fov: 50 }}>
+            <ambientLight intensity={1.8} />
+            <pointLight position={[10, 10, 10]} />
 
-          <OrbitControls
-            target={[0, 1, 0]}
-            enablePan={false}
-            minDistance={2.5}
-            maxDistance={3}
-            minPolarAngle={Math.PI / 2.5}
-            maxPolarAngle={Math.PI / 4}
-          />
-        </Canvas>
+            <Suspense fallback={null}>
+              <Modelo3D onParteClick={handleClick} />
+            </Suspense>
+
+            <OrbitControls
+              target={[0, 1, 0]}
+              enablePan={false}
+              minDistance={2.5}
+              maxDistance={3}
+              minPolarAngle={Math.PI / 2.5}
+              maxPolarAngle={Math.PI / 4}
+            />
+          </Canvas>
+        </div>
       </div>
     </>
   );
