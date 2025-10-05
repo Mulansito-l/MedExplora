@@ -5,71 +5,168 @@ const app = express();
 const PORT = 3000;
 
 // Middlewares
-app.use(cors());
-app.use(express.json());
+app.use(cors()); // Permite que el frontend se conecte
+app.use(express.json()); // Para recibir JSON en el body
 
-// Ruta para recibir la parte del cuerpo seleccionada
-// server.js
-app.post("/api/parte", (req, res) => {
-  const { parte } = req.body;
+// Rutas
+app.get("/", (req, res) => {
+  res.json({ mensaje: "Backend funcionando ✅" });
+});
 
-  // Base de datos simulada con info de cada parte
-  const informacionPartes = {
-    Cabeza: {
-      titulo: "Cabeza",
-      descripcion:
-        "La cabeza contiene el cerebro, principal órgano del sistema nervioso central.",
-      secciones: [
-        {
-          subtitulo: "Componentes principales",
-          contenido:
-            "Cerebro, cráneo, músculos faciales y órganos sensoriales.",
-        },
-        {
-          subtitulo: "Funciones",
-          contenido:
-            "Control del pensamiento, memoria, emociones y coordinación corporal.",
-        },
-      ],
-      datos: ["Peso promedio: 1.4 kg", "Contiene 100 mil millones de neuronas"],
-      imagenUrl: "/images/cabeza.jpg", // opcional
-    },
-    Torso: {
-      titulo: "Torso",
-      descripcion: "El torso protege los órganos vitales del cuerpo.",
-      secciones: [
-        {
-          subtitulo: "Órganos principales",
-          contenido: "Corazón, pulmones, estómago, hígado, riñones.",
-        },
-      ],
-      datos: ["Contiene la caja torácica", "Protege el corazón y pulmones"],
-      imagenUrl: "/images/torso.jpg",
-    },
-    Brazos: {
-      titulo: "Brazos",
-      descripcion:
-        "Los brazos permiten realizar movimientos complejos y manipular objetos.",
-      secciones: [
-        {
-          subtitulo: "Estructura",
-          contenido: "Húmero, radio, cúbito y músculos diversos.",
-        },
-      ],
-      datos: ["27 huesos en cada brazo y mano", "Más de 30 músculos"],
-      imagenUrl: "/images/brazos.jpg",
-    },
-    // Agrega más partes aquí
-  };
+app.get("/api/cabeza", (req, res) => {
+  res.json({
+    titulo: "Cabeza Humana",
+    fechaPublicacion: new Date(),
+    contenido: [
+      {
+        tipo: "p",
+        texto:
+          "La cabeza es la parte superior del cuerpo humano que contiene el cerebro, los órganos de los sentidos (ojos, oídos, nariz, lengua) y la boca. Es fundamental para la percepción del entorno, la comunicación y el control del cuerpo.",
+      },
+      {
+        tipo: "img",
+        path: "/recursos/cabeza.jpg",
+      },
+      {
+        tipo: "p",
+        texto: "Principales estructuras de la cabeza:",
+      },
+      {
+        tipo: "l",
+        elementos: ["Cráneo", "Cerebro", "Ojos", "Oídos", "Nariz", "Boca"],
+      },
+    ],
+  });
+});
 
-  const info = informacionPartes[parte] || {
-    titulo: parte,
-    descripcion: "Información no disponible para esta parte.",
-    secciones: [],
-    datos: [],
-  };
+app.get("/api/brazos", (req, res) => {
+  res.json({
+    titulo: "Brazos Humanos",
+    fechaPublicacion: new Date(),
+    contenido: [
+      {
+        tipo: "p",
+        texto:
+          "Los brazos son las extremidades superiores del cuerpo humano. Permiten realizar movimientos complejos, como levantar, empujar o sujetar objetos, y están formados por huesos, músculos, articulaciones, nervios y vasos sanguíneos.",
+      },
+      {
+        tipo: "img",
+        path: "/recursos/brazos.jpg",
+      },
+      {
+        tipo: "p",
+        texto: "Principales estructuras de los brazos:",
+      },
+      {
+        tipo: "l",
+        elementos: [
+          "Húmero",
+          "Cúbito",
+          "Radio",
+          "Músculos (bíceps, tríceps)",
+          "Articulaciones (hombro, codo, muñeca)",
+        ],
+      },
+    ],
+  });
+});
 
-  res.json(info);
+app.get("/api/piernas", (req, res) => {
+  res.json({
+    titulo: "Piernas Humanas",
+    fechaPublicacion: new Date(),
+    contenido: [
+      {
+        tipo: "p",
+        texto:
+          "Las piernas son las extremidades inferiores del cuerpo humano, fundamentales para el movimiento, el equilibrio y la postura. Están formadas por huesos, músculos, articulaciones y vasos sanguíneos.",
+      },
+      {
+        tipo: "img",
+        path: "/recursos/piernas.jpg",
+      },
+      {
+        tipo: "p",
+        texto: "Principales estructuras de las piernas:",
+      },
+      {
+        tipo: "l",
+        elementos: [
+          "Fémur",
+          "Rótula",
+          "Tibia",
+          "Peroné",
+          "Músculos (cuádriceps, isquiotibiales)",
+          "Articulaciones (cadera, rodilla, tobillo)",
+        ],
+      },
+    ],
+  });
+});
+
+app.get("/api/pies", (req, res) => {
+  res.json({
+    titulo: "Pies Humanos",
+    fechaPublicacion: new Date(),
+    contenido: [
+      {
+        tipo: "p",
+        texto:
+          "Los pies son la parte inferior de las piernas, encargados de soportar el peso del cuerpo y permitir la locomoción. Están formados por huesos, músculos, ligamentos y articulaciones que facilitan el equilibrio y la movilidad.",
+      },
+      {
+        tipo: "img",
+        path: "/recursos/pies.jpg",
+      },
+      {
+        tipo: "p",
+        texto: "Principales estructuras de los pies:",
+      },
+      {
+        tipo: "l",
+        elementos: [
+          "Tarsos",
+          "Metatarsos",
+          "Falanges",
+          "Arcos plantares",
+          "Ligamentos y tendones",
+        ],
+      },
+    ],
+  });
+});
+
+app.get("/api/torso", (req, res) => {
+  res.json({
+    titulo: "Torso Humano",
+    fechaPublicacion: new Date(),
+    contenido: [
+      {
+        tipo: "p",
+        texto:
+          "El torso es la parte central del cuerpo humano, donde se encuentran órganos vitales como el corazón, los pulmones y órganos digestivos. Está protegido por la caja torácica y soporta la cabeza y las extremidades.",
+      },
+      {
+        tipo: "img",
+        path: "/recursos/torso.jpg",
+      },
+      {
+        tipo: "p",
+        texto: "Principales estructuras del torso:",
+      },
+      {
+        tipo: "l",
+        elementos: [
+          "Columna vertebral",
+          "Caja torácica (costillas y esternón)",
+          "Pulmones",
+          "Corazón",
+          "Hígado y otros órganos abdominales",
+          "Músculos (pectoral, abdominales, dorsales)",
+        ],
+      },
+    ],
+  });
 });
 
 // Iniciar servidor
