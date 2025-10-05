@@ -4,10 +4,10 @@ import { Mesh, MeshStandardMaterial } from "three";
 import type { ThreeEvent } from "@react-three/fiber";
 
 interface Modelo3DProps {
-  onPartClick: (partName: string) => void;
+  onParteClick: (partName: string) => void;
 }
 
-export default function Modelo3D({ onPartClick }: Modelo3DProps) {
+export default function Modelo3D({ onParteClick }: Modelo3DProps) {
   const { scene } = useGLTF("/source/CuerpoDescuartizado.glb");
   const [hoveredMesh, setHoveredMesh] = useState<Mesh | null>(null);
 
@@ -28,21 +28,18 @@ export default function Modelo3D({ onPartClick }: Modelo3DProps) {
       scale={1}
       position={[0, 0, 0]}
       onPointerOver={(e: ThreeEvent<PointerEvent>) => {
-        const intersectedObject = e.intersections[0]?.object;
-
-        if (intersectedObject instanceof Mesh) {
-          const material = intersectedObject.material as MeshStandardMaterial;
-
+        const intersected = e.intersections[0]?.object;
+        if (intersected instanceof Mesh) {
+          const material = intersected.material as MeshStandardMaterial;
           if (material.emissive) {
-            if (hoveredMesh && hoveredMesh !== intersectedObject) {
+            if (hoveredMesh && hoveredMesh !== intersected) {
               const prevMaterial = hoveredMesh.material as MeshStandardMaterial;
               prevMaterial.emissive.setHex(
                 hoveredMesh.userData.originalEmissive || 0x000000
               );
             }
-
             material.emissive.set(0x555555);
-            setHoveredMesh(intersectedObject);
+            setHoveredMesh(intersected);
           }
         }
       }}
@@ -58,9 +55,9 @@ export default function Modelo3D({ onPartClick }: Modelo3DProps) {
         }
       }}
       onClick={(e: ThreeEvent<MouseEvent>) => {
-        const intersectedObject = e.intersections[0]?.object;
-        if (intersectedObject instanceof Mesh) {
-          onPartClick(intersectedObject.name);
+        const intersected = e.intersections[0]?.object;
+        if (intersected instanceof Mesh) {
+          onParteClick(intersected.name);
         }
       }}
     />

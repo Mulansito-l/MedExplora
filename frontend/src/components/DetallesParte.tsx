@@ -1,4 +1,4 @@
-import React from "react";
+import styles from "./DetallesParte.module.css";
 
 // Definimos los tipos de bloques de contenido
 export type BloqueContenido =
@@ -21,19 +21,20 @@ interface DetallesParteProps {
 
 export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
   return (
-    <div
-      className="articulo-full"
-      style={{ padding: "2rem", maxHeight: "100%", overflowY: "auto" }}
-    >
-      <h1>{data.titulo}</h1>
-      <p>
-        <em>{new Date(data.fechaPublicacion).toLocaleDateString()}</em>
+    <div className={styles.articuloFull}>
+      <h1 className={styles.titulo}>{data.titulo}</h1>
+      <p className={styles.fecha}>
+        {new Date(data.fechaPublicacion).toLocaleDateString()}
       </p>
 
       {data.contenido.map((bloque, index) => {
         switch (bloque.tipo) {
           case "p":
-            return <p key={index}>{bloque.texto || bloque.path}</p>;
+            return (
+              <p key={index} className={styles.parrafo}>
+                {bloque.texto || bloque.path}
+              </p>
+            );
 
           case "img":
             return (
@@ -41,13 +42,13 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
                 key={index}
                 src={bloque.path}
                 alt=""
-                style={{ maxWidth: "100%", margin: "1rem 0" }}
+                className={styles.imagen}
               />
             );
 
           case "l":
             return (
-              <ul key={index} style={{ margin: "1rem 0" }}>
+              <ul key={index} className={styles.lista}>
                 {bloque.elementos.map((el, i) => (
                   <li key={i}>{el}</li>
                 ))}
@@ -60,18 +61,7 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
       })}
 
       {onVolver && (
-        <button
-          onClick={onVolver}
-          style={{
-            marginTop: "1rem",
-            padding: "0.5rem 1rem",
-            backgroundColor: "#0070f3",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
+        <button onClick={onVolver} className={styles.botonVolver}>
           Volver al modelo
         </button>
       )}
