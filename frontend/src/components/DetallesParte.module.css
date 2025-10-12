@@ -148,3 +148,58 @@
 .botonVolver:active {
   transform: translateY(-1px);
 }
+
+/* Media Queries para Landscape */
+@media (max-height: 700px) and (orientation: landscape) {
+  .contenedor {
+    max-width: 95%;
+    height: 95vh;
+  }
+
+  .header {
+    padding: 1.5rem 2rem;
+  }
+
+  .titulo {
+    font-size: 1.8rem;
+  }
+
+  .fecha {
+    font-size: 0.85rem;
+  }
+
+  .cuerpo {
+    padding: 1.5rem 2rem;
+  }
+
+  .parrafo {
+    font-size: 0.95rem;
+  }
+
+  .botonVolver {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 2rem 1.5rem;
+  }
+
+  .titulo {
+    font-size: 2rem;
+  }
+
+  .cuerpo {
+    padding: 1.5rem;
+  }
+
+  .botonVolver {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    padding: 0.8rem 1.2rem;
+  }
+}

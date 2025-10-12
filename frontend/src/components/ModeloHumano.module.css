@@ -12,6 +12,24 @@
   z-index: 1;
 }
 
+.logoContainer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  width: 60px;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
 .titulo {
   color: white;
   font-size: 3rem;
@@ -50,20 +68,88 @@
   display: flex;
 }
 
-.logoContainer {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* Media Queries para Landscape */
+
+@media (orientation: landscape) and (max-height: 800px) {
+  .wrapper {
+    flex-direction: row !important;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+
+  .logoContainer {
+    margin-top: 0;
+    order: 1;
+  }
+
+  .logo {
+    width: 50px;
+  }
+
+  .titulo {
+    font-size: 2rem;
+    margin-bottom: 0;
+    order: 2;
+  }
+
+  .canvasContainer {
+    width: auto !important;
+    height: 100vh !important; /* Aumentado de 80vh a 90vh */
+    aspect-ratio: 1 !important;
+    order: 3;
+  }
 }
 
-.logo {
-  width: 60px;
-  height: auto;
-  object-fit: contain;
-  transition: transform 0.3s ease;
+/* Media Queries para pantallas muy bajas en landscape */
+@media (orientation: landscape) and (max-height: 600px) {
+  .wrapper {
+    gap: 1rem;
+  }
+
+  .logo {
+    width: 40px;
+  }
+
+  .titulo {
+    font-size: 1.5rem;
+  }
+
+  .canvasContainer {
+    height: 90vh !important; /* Aumentado de 75vh a 85vh */
+  }
 }
 
-.logo:hover {
-  transform: scale(1.05);
+/* Media Queries para móviles en portrait */
+@media (max-width: 768px) and (orientation: portrait) {
+  .logoContainer {
+    margin-top: 10px;
+  }
+
+  .logo {
+    width: 50px;
+  }
+
+  .titulo {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .canvasContainer {
+    width: 90vw;
+    height: 120vw;
+    max-width: 450px;
+    max-height: 1000px;
+  }
+}
+
+/* Media Queries para tablets */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+  .canvasContainer {
+    width: 600px;
+    height: 600px;
+  }
+
+  .titulo {
+    font-size: 2.5rem;
+  }
 }

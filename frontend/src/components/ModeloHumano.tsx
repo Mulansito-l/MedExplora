@@ -31,9 +31,12 @@ export default function ModeloHumano() {
           articulo ? styles.hidden : styles.visible
         }`}
       >
-
         <div className={styles.logoContainer}>
-          <img src="recursos/escudoUABC.png" alt="Logo" className={styles.logo} />
+          <img
+            src="recursos/escudoUABC.png"
+            alt="Logo"
+            className={styles.logo}
+          />
         </div>
 
         <h1 className={styles.titulo}>MedExplora UABC</h1>
