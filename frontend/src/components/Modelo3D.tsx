@@ -54,7 +54,7 @@ export default function Modelo3D({ onParteClick }: Modelo3DProps) {
           setHoveredMesh(null);
         }
       }}
-      onClick={(e: ThreeEvent<MouseEvent>) => {
+      onClick={(e: ThreeEvent<PointerEvent>) => {
         const intersected = e.intersections[0]?.object;
         if (intersected instanceof Mesh) {
           onParteClick(intersected.name);
