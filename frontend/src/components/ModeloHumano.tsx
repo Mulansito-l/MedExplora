@@ -33,11 +33,16 @@ export default function ModeloHumano() {
           articulo ? styles.hidden : styles.visible
         }`}
       >
+
+        <div className={styles.logoContainer}>
+          <img src="recursos/escudoUABC.png" alt="Logo" className={styles.logo} />
+        </div>
+
         <h1 className={styles.titulo}>MedExplora UABC</h1>
 
         <div className={styles.canvasContainer}>
           <Canvas camera={{ position: [0, 0, 1], fov: 50 }}>
-            <ambientLight intensity={1.8} />
+            <ambientLight intensity={10} />
             <pointLight position={[10, 10, 10]} />
 
             <Suspense fallback={null}>
