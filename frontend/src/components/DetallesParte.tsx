@@ -12,18 +12,42 @@ export type ArticuloType = {
 };
 
 interface DetallesParteProps {
-  data: ArticuloType;
+  data: any; // 👈 acepta la estructura cruda
   onVolver?: () => void;
 }
 
+// 🔁 Función para adaptar la estructura externa
+function transformarData(dataOriginal: any): ArticuloType {
+  const articulo = dataOriginal[0];
+
+  const contenido: BloqueContenido[] = articulo.contenido.map((bloque: any) => {
+    switch (bloque.__component) {
+      case "shared.rich-text":
+        return { tipo: "p", texto: bloque.body || "" };
+      case "shared.media":
+        return { tipo: "img", path: "http://localhost:1337" + bloque.file.url || "" };
+      default:
+        return { tipo: "p", texto: "[Elemento no soportado]" };
+    }
+  });
+
+  return {
+    titulo: articulo.Title,
+    fechaPublicacion: articulo.Date,
+    contenido,
+  };
+}
+
 export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
+  const articulo = transformarData(data); // 👈 lo convertimos aquí
+
   return (
     <div className={styles.articuloFull}>
       <div className={styles.contenedor}>
         <div className={styles.header}>
-          <h1 className={styles.titulo}>{data.titulo}</h1>
+          <h1 className={styles.titulo}>{articulo.titulo}</h1>
           <p className={styles.fecha}>
-            {new Date(data.fechaPublicacion).toLocaleDateString("es-ES", {
+            {new Date(articulo.fechaPublicacion).toLocaleDateString("es-ES", {
               year: "numeric",
               month: "long",
               day: "numeric",
@@ -32,7 +56,7 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
         </div>
 
         <div className={styles.cuerpo}>
-          {data.contenido.map((bloque, index) => {
+          {articulo.contenido.map((bloque, index) => {
             switch (bloque.tipo) {
               case "p":
                 return (
@@ -40,7 +64,6 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
                     {bloque.texto || bloque.path}
                   </p>
                 );
-
               case "img":
                 return (
                   <img
@@ -50,7 +73,6 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
                     className={styles.imagen}
                   />
                 );
-
               case "l":
                 return (
                   <ul key={index} className={styles.lista}>
@@ -59,7 +81,6 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
                     ))}
                   </ul>
                 );
-
               default:
                 return null;
             }

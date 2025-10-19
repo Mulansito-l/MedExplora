@@ -11,11 +11,11 @@ export default function ModeloHumano() {
 
   const handleClick = async (partName: string) => {
     try {
-      const response = await fetch(`http://localhost:1337/api/${partName}?populate=*`);
-
+      const response = await fetch("http://localhost:1337/api/articulos?filters[id][$eq]=4&populate[contenido][populate]=*");
       if (!response.ok) throw new Error("Error en el servidor");
 
       const data = await response.json();
+      console.log("Fetched artículo data:", data);
       setArticulo(data.data as ArticuloType);
     } catch (err) {
       console.error("Error fetching artículo:", err);
