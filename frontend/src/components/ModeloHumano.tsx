@@ -13,32 +13,45 @@ export default function ModeloHumano() {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleClick = async (partName: string) => {
-    // IMPORTANTE: No procesar si estaba rotando el modelo
-    if (isDragging) {
-      console.warn("⚠️ Click ignorado - usuario estaba rotando");
-      return;
-    }
-
-    console.log("🎯 Click procesado en:", partName);
-
     try {
-      console.log("📡 Enviando petición a:", partName);
-      const response = await fetch(
-        `http://localhost:3000/api/${partName}?populate=*`
-      );
+      console.log("Parte seleccionada:", partName);
 
-      if (!response.ok) {
-        console.error("❌ Error del servidor:", response.status);
-        throw new Error("Error en el servidor");
+      // Mapa de ejemplo: nombre de parte → ID en la base de datos
+      const partToIdMap: Record<string, number> = {
+        Cabeza: 6,
+        Brazos: 9,
+        Torso: 4,
+        Piernas: 13,
+        Pies: 11,
+      };
+
+      const id = partToIdMap[partName];
+
+      if (!id) {
+        console.warn(`No hay artículo asociado a la parte: ${partName}`);
+        return;
       }
 
+      const response = await fetch(
+        `http://localhost:1337/api/articulos?filters[id][$eq]=${id}&populate=*`
+      );
+
+      if (!response.ok) throw new Error("Error en el servidor");
+
+      //const data = await response.json();
       const data = await response.json();
-      console.log("✅ Datos recibidos correctamente", "success");
-      setArticulo(data.data as ArticuloType);
+      // En Strapi, `data.data` normalmente es un array, por eso accedemos al primero
+      setArticulo(data.data[0]);
+      //console.log("Artículo cargado:", data.data[0]);
+
+      
+      console.log("Respuesta completa del servidor:", data);
+
     } catch (err) {
       console.error("💥 Error fetching artículo:", err);
     }
   };
+
 
   return (
     <>
