@@ -18,11 +18,11 @@ export default function ModeloHumano() {
 
       // Mapa de ejemplo: nombre de parte → ID en la base de datos
       const partToIdMap: Record<string, number> = {
-        Cabeza: 6,
-        Brazos: 9,
+        Cabeza: 2,
+        Brazos: 8,
         Torso: 4,
-        Piernas: 13,
-        Pies: 11,
+        Piernas: 6,
+        Pies: 10,
       };
 
       const id = partToIdMap[partName];
@@ -32,14 +32,14 @@ export default function ModeloHumano() {
         return;
       }
 
-      const response = await fetch("http://localhost:1337/api/articulos?filters[id][$eq]=${id}&populate[contenido][populate]=*");
+      const response = await fetch(`http://192.168.100.6:1337/api/articulos?filters[id][$eq]=${id}&populate[contenido][populate]=*`);
 
       if (!response.ok) throw new Error("Error en el servidor");
 
       //const data = await response.json();
       const data = await response.json();
       // En Strapi, `data.data` normalmente es un array, por eso accedemos al primero
-      setArticulo(data.data[0]);
+      setArticulo(data.data);
       //console.log("Artículo cargado:", data.data[0]);
 
       
@@ -54,7 +54,6 @@ export default function ModeloHumano() {
   return (
     <>
       <MobileDebugPanel />
-
       {articulo && (
         <DetallesParte data={articulo} onVolver={() => setArticulo(null)} />
       )}

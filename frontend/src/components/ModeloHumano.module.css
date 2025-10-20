@@ -100,24 +100,14 @@
   }
 }
 
-/* Media Queries para pantallas muy bajas en landscape */
-@media (orientation: landscape) and (max-height: 600px) {
+@media (orientation: landscape) and (max-height: 800px) {
   .wrapper {
-    gap: 1rem;
-  }
-
-  .logo {
-    width: 40px;
-  }
-
-  .titulo {
-    font-size: 1.5rem;
-  }
-
-  .canvasContainer {
-    height: 90vh !important; /* Aumentado de 75vh a 85vh */
+    flex-direction: column !important; /* en lugar de row */
+    gap: 1.5rem;
+    padding: 1rem;
   }
 }
+
 
 /* Media Queries para móviles en portrait */
 @media (max-width: 768px) and (orientation: portrait) {

@@ -4,9 +4,10 @@ export default [
   {
     name: 'strapi::cors',
     config: {
-      origin: ['http://localhost:5173'], // el origen de tu frontend
+      enabled: true,
+      origin: ['*'],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      headers: ['Content-Type', 'Authorization'], // si usas JWT u headers personalizados
+      headers: ['*'],
     },
   },
   'strapi::security',
