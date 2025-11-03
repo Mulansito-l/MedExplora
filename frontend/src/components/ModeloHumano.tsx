@@ -6,6 +6,7 @@ import DetallesParte from "./DetallesParte";
 import MobileDebugPanel from "./MobileDebugPanel";
 import type { ArticuloType } from "./DetallesParte";
 import styles from "./ModeloHumano.module.css";
+import type { RGBA_ASTC_5x4_Format } from "three";
 
 export default function ModeloHumano() {
   const [articulo, setArticulo] = useState<ArticuloType | null>(null);
@@ -18,7 +19,7 @@ export default function ModeloHumano() {
 
       // Mapa de ejemplo: nombre de parte → ID en la base de datos
       const partToIdMap: Record<string, number> = {
-        Cabeza: 2,
+        Cabeza: 2, 
         Brazos: 8,
         Torso: 4,
         Piernas: 6,
