@@ -1,10 +1,10 @@
 {
-  "kind": "collectionType",
-  "collectionName": "articulos",
+  "kind": "singleType",
+  "collectionName": "pies",
   "info": {
-    "singularName": "articulo",
-    "pluralName": "articulos",
-    "displayName": "Articulo"
+    "singularName": "pie",
+    "pluralName": "pies",
+    "displayName": "Pie"
   },
   "options": {
     "draftAndPublish": true

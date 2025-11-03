@@ -30,11 +30,7 @@ const toUrl = (u?: string) =>
  * para renderizar en el frontend.
  */
 function transformarData(dataOriginal: any): ArticuloType {
-  const articulo =
-    Array.isArray(dataOriginal) && dataOriginal.length > 0
-      ? dataOriginal[0]
-      : {};
-
+  const articulo = dataOriginal;
   const titulo = articulo?.Title ?? "Sin título";
   const fechaPublicacion = articulo?.Date ?? new Date().toISOString();
 

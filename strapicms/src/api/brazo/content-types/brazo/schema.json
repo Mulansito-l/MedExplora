@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "brazos",
+  "info": {
+    "singularName": "brazo",
+    "pluralName": "brazos",
+    "displayName": "Brazo"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Date": {
+      "type": "date"
+    },
+    "contenido": {
+      "type": "dynamiczone",
+      "components": [
+        "shared.rich-text",
+        "shared.media"
+      ]
+    }
+  }
+}
