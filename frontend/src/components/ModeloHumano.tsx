@@ -7,6 +7,7 @@ import MobileDebugPanel from "./MobileDebugPanel";
 import type { ArticuloType } from "./DetallesParte";
 import { fetchArticuloById } from "../services/articulo";
 import styles from "./ModeloHumano.module.css";
+import type { RGBA_ASTC_5x4_Format } from "three";
 
 export default function ModeloHumano() {
   const [articulo, setArticulo] = useState<ArticuloType | null>(null);

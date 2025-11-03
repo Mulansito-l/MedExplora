@@ -1,3 +1,4 @@
+/* === ESTRUCTURA GENERAL === */
 .articuloFull {
   width: 100%;
   height: 100vh;
@@ -34,6 +35,7 @@
   }
 }
 
+/* === CABECERA === */
 .header {
   background: linear-gradient(135deg, #52c234 0%, #ffd700 100%);
   padding: 3rem 2rem 2rem;
@@ -56,6 +58,7 @@
   font-weight: 300;
 }
 
+/* === CUERPO DEL ARTÍCULO === */
 .cuerpo {
   padding: 2.5rem;
   flex: 1;
@@ -65,34 +68,28 @@
 .cuerpo::-webkit-scrollbar {
   width: 8px;
 }
-
 .cuerpo::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
 }
-
 .cuerpo::-webkit-scrollbar-thumb {
   background: #52c234;
   border-radius: 10px;
 }
-
 .cuerpo::-webkit-scrollbar-thumb:hover {
   background: #3a9e1f;
 }
 
-/* 🔸 RICH TEXT */
+/* === TEXTO === */
 .parrafo {
   margin: 1.2rem 0;
   line-height: 1.8;
   font-size: 1.05rem;
   color: #333;
 }
-
-/* Aplica formato al contenido interno generado por Strapi */
 .parrafo p {
   margin: 1.2rem 0;
 }
-
 .parrafo h1,
 .parrafo h2,
 .parrafo h3 {
@@ -101,78 +98,22 @@
   font-weight: 700;
   color: #222;
 }
-
 .parrafo h1 {
   font-size: 1.8rem;
 }
-
 .parrafo h2 {
   font-size: 1.5rem;
 }
-
 .parrafo h3 {
   font-size: 1.3rem;
 }
 
-.parrafo ul,
-.parrafo ol {
-  margin: 1.5rem 0;
-  padding-left: 2rem;
-}
-
-.parrafo ul li,
-.parrafo ol li {
-  margin-bottom: 0.8rem;
-  line-height: 1.6;
-  color: #444;
-}
-
-.parrafo ul li::marker {
-  color: #52c234;
-  font-weight: bold;
-}
-
-.parrafo strong {
-  color: #000;
-  font-weight: 700;
-}
-
-.parrafo em {
-  font-style: italic;
-  color: #555;
-}
-
-.parrafo a {
-  color: #52c234;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.parrafo a:hover {
-  color: #3a9e1f;
-  text-decoration: underline;
-}
-
-.imagen {
-  max-width: 100%;
-  height: auto;
-  margin: 2rem 0;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease;
-}
-
-.imagen:hover {
-  transform: scale(1.02);
-}
-
+/* === LISTAS === */
 .lista {
   margin: 1.5rem 0;
   padding-left: 1.5rem;
   list-style: none;
 }
-
 .lista li {
   position: relative;
   margin-bottom: 1rem;
@@ -180,7 +121,6 @@
   line-height: 1.6;
   color: #444;
 }
-
 .lista li::before {
   content: "→";
   position: absolute;
@@ -190,6 +130,58 @@
   font-size: 1.2rem;
 }
 
+/* === IMÁGENES === */
+.imagen {
+  max-width: 100%;
+  height: auto;
+  margin: 2rem 0;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+.imagen:hover {
+  transform: scale(1.02);
+}
+
+/* === AUDIO === */
+audio.media {
+  display: block;
+  margin: 1.5rem auto;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* === VIDEO (responsive con proporción 16:9) === */
+.videoContainer {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 1.5rem auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.videoContainer::before {
+  content: "";
+  display: block;
+  padding-top: 56.25%; /* 16:9 ratio */
+}
+
+.videoContainer video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+/* === BOTÓN VOLVER === */
 .botonVolver {
   position: fixed;
   bottom: 2rem;
@@ -206,43 +198,35 @@
   transition: all 0.3s ease;
   z-index: 1000;
 }
-
 .botonVolver:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(82, 194, 52, 0.6);
 }
-
 .botonVolver:active {
   transform: translateY(-1px);
 }
 
-/* Media Queries para Landscape */
+/* === RESPONSIVE === */
 @media (max-height: 700px) and (orientation: landscape) {
   .contenedor {
     max-width: 95%;
     height: 95vh;
   }
-
   .header {
     padding: 1.5rem 2rem;
   }
-
   .titulo {
     font-size: 1.8rem;
   }
-
   .fecha {
     font-size: 0.85rem;
   }
-
   .cuerpo {
     padding: 1.5rem 2rem;
   }
-
   .parrafo {
     font-size: 0.95rem;
   }
-
   .botonVolver {
     bottom: 1rem;
     right: 1rem;
@@ -255,47 +239,18 @@
   .header {
     padding: 2rem 1.5rem;
   }
-
   .titulo {
     font-size: 2rem;
   }
-
   .cuerpo {
     padding: 1.5rem;
   }
-
   .botonVolver {
     bottom: 1.5rem;
     right: 1.5rem;
     padding: 0.8rem 1.2rem;
   }
+  .videoContainer {
+    max-width: 100%;
+  }
 }
-/* 🎥 VIDEO RESPONSIVO (shared.media) */
-.videoContainer {
-  position: relative;
-  width: 100%;
-  max-width: 640px;      /* tamaño máximo del video */
-  margin: 1.5rem auto;   /* centrado horizontal */
-  border-radius: 12px;
-  overflow: hidden;
-  background: #000;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-}
-
-/* Mantiene proporción 16:9 sin deformar */
-.videoContainer::before {
-  content: "";
-  display: block;
-  padding-top: 56.25%; /* (9/16)*100 */
-}
-
-.videoContainer video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* evita estiramiento */
-  border-radius: 12px;
-}
-
