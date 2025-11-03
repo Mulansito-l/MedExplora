@@ -5,6 +5,7 @@ import Modelo3D from "./Modelo3D";
 import DetallesParte from "./DetallesParte";
 import MobileDebugPanel from "./MobileDebugPanel";
 import type { ArticuloType } from "./DetallesParte";
+import { fetchArticuloById } from "../services/articulo";
 import styles from "./ModeloHumano.module.css";
 
 export default function ModeloHumano() {
@@ -32,24 +33,16 @@ export default function ModeloHumano() {
         return;
       }
 
-      const response = await fetch(`http://localhost:1337/api/articulos?filters[id][$eq]=${id}&populate[contenido][populate]=*`);
+      // Usar helper para facilitar el mock en tests
+      const data = await fetchArticuloById(id);
 
-      if (!response.ok) throw new Error("Error en el servidor");
-
-      //const data = await response.json();
-      const data = await response.json();
-      // En Strapi, `data.data` normalmente es un array, por eso accedemos al primero
+      // En Strapi, `data.data` normalmente es un array, por eso se asigna
       setArticulo(data.data);
-      //console.log("Artículo cargado:", data.data[0]);
-
-      
       console.log("Respuesta completa del servidor:", data);
-
     } catch (err) {
       console.error("💥 Error fetching artículo:", err);
     }
   };
-
 
   return (
     <>
