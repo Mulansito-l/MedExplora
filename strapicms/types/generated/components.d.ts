@@ -1,5 +1,16 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface SharedAudio extends Struct.ComponentSchema {
+  collectionName: 'components_shared_audio';
+  info: {
+    displayName: 'Audio';
+    icon: 'play';
+  };
+  attributes: {
+    Audio: Schema.Attribute.Media<'files' | 'audios', true>;
+  };
+}
+
 export interface SharedMedia extends Struct.ComponentSchema {
   collectionName: 'components_shared_media';
   info: {
@@ -7,7 +18,7 @@ export interface SharedMedia extends Struct.ComponentSchema {
     icon: 'file-video';
   };
   attributes: {
-    file: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
+    file: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
   };
 }
 
@@ -21,6 +32,15 @@ export interface SharedQuote extends Struct.ComponentSchema {
     body: Schema.Attribute.Text;
     title: Schema.Attribute.String;
   };
+}
+
+export interface SharedReferenciado extends Struct.ComponentSchema {
+  collectionName: 'components_shared_referenciados';
+  info: {
+    displayName: 'Referenciado';
+    icon: 'globe';
+  };
+  attributes: {};
 }
 
 export interface SharedRichText extends Struct.ComponentSchema {
@@ -65,8 +85,10 @@ export interface SharedSlider extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'shared.audio': SharedAudio;
       'shared.media': SharedMedia;
       'shared.quote': SharedQuote;
+      'shared.referenciado': SharedReferenciado;
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;
       'shared.slider': SharedSlider;

@@ -270,3 +270,32 @@
     padding: 0.8rem 1.2rem;
   }
 }
+/* 🎥 VIDEO RESPONSIVO (shared.media) */
+.videoContainer {
+  position: relative;
+  width: 100%;
+  max-width: 640px;      /* tamaño máximo del video */
+  margin: 1.5rem auto;   /* centrado horizontal */
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Mantiene proporción 16:9 sin deformar */
+.videoContainer::before {
+  content: "";
+  display: block;
+  padding-top: 56.25%; /* (9/16)*100 */
+}
+
+.videoContainer video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* evita estiramiento */
+  border-radius: 12px;
+}
+

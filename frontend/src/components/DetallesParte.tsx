@@ -1,46 +1,115 @@
 import React from "react";
 import styles from "./DetallesParte.module.css";
+import FormattedText from "./FormattedText";
 
-export type BloqueContenido =
-  | { tipo: "p"; texto?: string; path?: string }
+type BloqueContenido =
+  | { tipo: "p"; texto?: string }
   | { tipo: "img"; path: string }
+  | { tipo: "audio"; path: string }
+  | { tipo: "video"; path: string }
   | { tipo: "l"; elementos: string[] };
 
-export type ArticuloType = {
+type ArticuloType = {
   titulo: string;
   fechaPublicacion: string;
   contenido: BloqueContenido[];
 };
 
 interface DetallesParteProps {
-  data: any; // 👈 acepta la estructura cruda
+  data: any;
   onVolver?: () => void;
 }
 
-// 🔁 Función para adaptar la estructura externa
-function transformarData(dataOriginal: any): ArticuloType {
-  const articulo = dataOriginal[0];
+const BASE_URL = "http://localhost:1337";
 
-  const contenido: BloqueContenido[] = articulo.contenido.map((bloque: any) => {
-    switch (bloque.__component) {
+const toUrl = (u?: string) =>
+  u?.startsWith("http") ? u : `${BASE_URL}${u ?? ""}`;
+
+/**
+ * Transforma los datos recibidos de Strapi en un formato uniforme
+ * para renderizar en el frontend.
+ */
+function transformarData(dataOriginal: any): ArticuloType {
+  const articulo = dataOriginal;
+  const titulo = articulo?.Title ?? "Sin título";
+  const fechaPublicacion = articulo?.Date ?? new Date().toISOString();
+
+  const contenidoCrudo: any[] = Array.isArray(articulo?.contenido)
+    ? articulo.contenido
+    : [];
+
+  const contenido: BloqueContenido[] = contenidoCrudo.map((bloque: any) => {
+    const comp = bloque?.__component ?? bloque?.component;
+
+    switch (comp) {
+      // 🔹 Texto enriquecido
       case "shared.rich-text":
-        return { tipo: "p", texto: bloque.body || "" };
-      case "shared.media":
-        return { tipo: "img", path: "http://localhost:1337" + bloque.file.url || "" };
+        return { tipo: "p", texto: bloque?.body ?? bloque?.texto ?? "" };
+
+      // 🔹 Media general (imagen, video o audio)
+      case "shared.media": {
+        const file = bloque?.file;
+        const url =
+          file?.url ??
+          file?.[0]?.url ??
+          file?.data?.attributes?.url ??
+          bloque?.path ??
+          "";
+        const mime =
+          file?.mime ??
+          file?.[0]?.mime ??
+          file?.data?.attributes?.mime ??
+          "";
+
+        if (!url)
+          return { tipo: "p", texto: "[Archivo multimedia no disponible]" };
+
+        if (mime.startsWith("image/")) {
+          return { tipo: "img", path: toUrl(url) };
+        } else if (mime.startsWith("video/")) {
+          return { tipo: "video", path: toUrl(url) };
+        } else if (mime.startsWith("audio/")) {
+          return { tipo: "audio", path: toUrl(url) };
+        } else {
+          return {
+            tipo: "p",
+            texto: `[Tipo de archivo no soportado: ${mime}]`,
+          };
+        }
+      }
+
+      // 🔹 Lista de elementos
+      case "shared.list": {
+        const items: string[] = Array.isArray(bloque?.items)
+          ? bloque.items
+          : Array.isArray(bloque?.elementos)
+          ? bloque.elementos
+          : [];
+        return { tipo: "l", elementos: items };
+      }
+
+      // 🔹 Por defecto
       default:
         return { tipo: "p", texto: "[Elemento no soportado]" };
     }
   });
 
-  return {
-    titulo: articulo.Title,
-    fechaPublicacion: articulo.Date,
-    contenido,
-  };
+  return { titulo, fechaPublicacion, contenido };
 }
 
 export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
-  const articulo = transformarData(data); // 👈 lo convertimos aquí
+  let articulo: ArticuloType;
+  try {
+    articulo = transformarData(data);
+  } catch (e) {
+    articulo = {
+      titulo: "Error al cargar",
+      fechaPublicacion: new Date().toISOString(),
+      contenido: [
+        { tipo: "p", texto: "Hubo un problema al parsear el contenido." },
+      ],
+    };
+  }
 
   return (
     <div className={styles.articuloFull}>
@@ -60,19 +129,11 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
           {articulo.contenido.map((bloque, index) => {
             switch (bloque.tipo) {
               case "p":
-              return (
-                <p key={index} className={styles.parrafo}>
-                  {bloque.texto
-                    ?.split(/\n+/) // separa por saltos de línea
-                    .map((linea, i) => (
-                      <React.Fragment key={i}>
-                        {linea.trim()}
-                        <br />
-                        <br />
-                      </React.Fragment>
-                    ))}
-                </p>
-              );
+                return (
+                  <div key={index} className={styles.parrafo}>
+                    <FormattedText text={bloque.texto ?? ""} />
+                  </div>
+                );
               case "img":
                 return (
                   <img
@@ -82,6 +143,23 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
                     className={styles.imagen}
                   />
                 );
+              case "audio":
+                return (
+                  <audio key={index} controls className={styles.media}>
+                    <source src={bloque.path} type="audio/mpeg" />
+                    Tu navegador no soporta el audio.
+                  </audio>
+                );
+             case "video":
+                return (
+                  <div key={index} className={styles.videoContainer}>
+                    <video controls>
+                      <source src={bloque.path} type="video/mp4" />
+                      Tu navegador no soporta el video.
+                    </video>
+                  </div>
+                );
+
               case "l":
                 return (
                   <ul key={index} className={styles.lista}>
@@ -105,3 +183,5 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
     </div>
   );
 }
+
+export type { ArticuloType };

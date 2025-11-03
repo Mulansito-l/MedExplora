@@ -5,7 +5,9 @@ import Modelo3D from "./Modelo3D";
 import DetallesParte from "./DetallesParte";
 import MobileDebugPanel from "./MobileDebugPanel";
 import type { ArticuloType } from "./DetallesParte";
+import { fetchArticuloById } from "../services/articulo";
 import styles from "./ModeloHumano.module.css";
+import type { RGBA_ASTC_5x4_Format } from "three";
 
 export default function ModeloHumano() {
   const [articulo, setArticulo] = useState<ArticuloType | null>(null);
@@ -16,30 +18,27 @@ export default function ModeloHumano() {
     try {
       console.log("Parte seleccionada:", partName);
 
-      const partToIdMap: Record<string, number> = {
-        Cabeza: 2,
-        Brazos: 8,
-        Torso: 4,
-        Piernas: 6,
-        Pies: 10,
+      // Mapa de plural → singular para los endpoints
+      const singularMap: Record<string, string> = {
+        Cabeza: "cabeza",
+        Brazos: "brazo",
+        Torso: "torso",
+        Piernas: "pierna",
+        Pies: "pie",
       };
 
-      const id = partToIdMap[partName];
+      const endpoint = singularMap[partName];
 
-      if (!id) {
-        console.warn(`No hay artículo asociado a la parte: ${partName}`);
+      if (!endpoint) {
+        console.warn(`No existe endpoint para la parte: ${partName}`);
         return;
       }
 
-      const response = await fetch(
-        `http://localhost:1337/api/articulos?filters[id][$eq]=${id}&populate[contenido][populate]=*`
-      );
+      const response = await fetch(`http://192.168.100.11:1337/api/${endpoint}?populate=*`);
 
-      if (!response.ok) throw new Error("Error en el servidor");
-
-      const data = await response.json();
+      // En Strapi, `data.data` normalmente es un array, por eso se asigna
       setArticulo(data.data);
-
+      //console.log("Artículo cargado:", data.data[0]);
       console.log("Respuesta completa del servidor:", data);
     } catch (err) {
       console.error("Error fetching artículo:", err);
