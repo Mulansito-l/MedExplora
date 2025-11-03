@@ -41,7 +41,7 @@ export default function ModeloHumano() {
       //console.log("Artículo cargado:", data.data[0]);
       console.log("Respuesta completa del servidor:", data);
     } catch (err) {
-      console.error("💥 Error fetching artículo:", err);
+      console.error("Error fetching artículo:", err);
     }
   };
 
@@ -57,20 +57,12 @@ export default function ModeloHumano() {
           articulo ? styles.hidden : styles.visible
         }`}
       >
-        <div className={styles.logoContainer}>
-          <img
-            src="recursos/escudoUABC.png"
-            alt="Logo"
-            className={styles.logo}
-          />
-        </div>
-
         <h1 className={styles.titulo}>MedExplora UABC</h1>
 
         <div className={styles.canvasContainer}>
           <Canvas
             camera={{ position: [0, 0, 1], fov: 50 }}
-            onPointerMissed={() => console.log("❌ Click fuera del modelo")}
+            onPointerMissed={() => console.log("Click fuera del modelo")}
           >
             <ambientLight intensity={10} />
             <pointLight position={[10, 10, 10]} />
@@ -87,17 +79,15 @@ export default function ModeloHumano() {
               maxDistance={3}
               minPolarAngle={Math.PI / 2.5}
               maxPolarAngle={Math.PI / 4}
-              // ⚠️ CRÍTICO: Estos eventos detectan cuando el usuario está rotando
               onStart={() => {
-                console.log("🔄 Inicio de rotación");
+                console.log("Inicio de rotación");
                 setIsDragging(true);
               }}
               onEnd={() => {
-                console.log("⏹️ Fin de rotación");
-                // Pequeño delay para asegurar que no se procese como click
+                console.log("Fin de rotación");
                 setTimeout(() => {
                   setIsDragging(false);
-                  console.log("✅ Listo para clicks");
+                  console.log("Listo para clicks");
                 }, 100);
               }}
             />
