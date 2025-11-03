@@ -19,14 +19,14 @@ interface DetallesParteProps {
 
 // 🔁 Función para adaptar la estructura externa
 function transformarData(dataOriginal: any): ArticuloType {
-  const articulo = dataOriginal[0];
+  const articulo = dataOriginal;
 
   const contenido: BloqueContenido[] = articulo.contenido.map((bloque: any) => {
     switch (bloque.__component) {
       case "shared.rich-text":
         return { tipo: "p", texto: bloque.body || "" };
       case "shared.media":
-        return { tipo: "img", path: "http://localhost:1337" + bloque.file.url || "" };
+        return { tipo: "img", path: "http://192.168.100.11:1337" + bloque.file.url || "" };
       default:
         return { tipo: "p", texto: "[Elemento no soportado]" };
     }
