@@ -34,7 +34,13 @@ export default function ModeloHumano() {
         return;
       }
 
-      const response = await fetch(`http://192.168.100.11:1337/api/${endpoint}?populate=*`);
+      const response = await fetch(
+  `http://localhost:1337/api/torso?populate[contenido][populate]=*`
+);
+
+      if (!response.ok) throw new Error("Error en el servidor");
+      //const data = await response.json();
+      const data = await response.json();
 
       // En Strapi, `data.data` normalmente es un array, por eso se asigna
       setArticulo(data.data);

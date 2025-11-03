@@ -1,17 +1,20 @@
+/* ===== Fondo general y contenedor principal ===== */
 .wrapper {
   position: fixed;
-  top: 60px; /* ↓↓↓ bajamos todo para no tapar el título con la navbar */
+  top: 60px; /* deja espacio para la navbar */
   left: 0;
   width: 100%;
-  height: calc(100vh - 60px); /* ajusta la altura restante de la pantalla */
+  height: calc(100vh - 60px); /* altura visible sin la barra */
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* 🔹 texto arriba, modelo abajo */
   justify-content: center;
   align-items: center;
   background: linear-gradient(135deg, #52c234 0%, #ffd700 100%);
   z-index: 1;
+  overflow: hidden;
 }
 
+/* ===== Contenedor del logo ===== */
 .logoContainer {
   margin-top: 20px;
   display: flex;
@@ -30,15 +33,19 @@
   transform: scale(1.05);
 }
 
+/* ===== Texto principal ===== */
 .titulo {
   color: white;
   font-size: 3rem;
   font-weight: 700;
-  margin-bottom: 2rem;
+  margin-bottom: 2rem; /* separación con el modelo */
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   letter-spacing: 1px;
+  text-align: center; /* 🔹 centrado horizontal */
+  width: 100%;
 }
 
+/* ===== Contenedor del modelo 3D o canvas ===== */
 .canvasContainer {
   width: 700px;
   height: 700px;
@@ -47,8 +54,12 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   animation: fadeIn 0.4s ease-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+/* ===== Animación de entrada ===== */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -60,6 +71,7 @@
   }
 }
 
+/* ===== Clases de visibilidad opcionales ===== */
 .hidden {
   display: none;
 }
@@ -68,60 +80,8 @@
   display: flex;
 }
 
-/* Media Queries para Landscape */
-@media (orientation: landscape) and (max-height: 800px) {
-  .wrapper {
-    flex-direction: row !important;
-    gap: 1.5rem;
-    padding: 1rem;
-  }
-
-  .logoContainer {
-    margin-top: 0;
-    order: 1;
-  }
-
-  .logo {
-    width: 50px;
-  }
-
-  .titulo {
-    color: white;
-    font-size: 3rem;
-    font-weight: 700;
-    margin-top: 60px;
-    margin-bottom: 2rem;
-    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    letter-spacing: 1px;
-  }
-
-  .canvasContainer {
-    width: auto !important;
-    height: 100vh !important;
-    aspect-ratio: 1 !important;
-    order: 3;
-  }
-}
-
-@media (orientation: landscape) and (max-height: 800px) {
-  .wrapper {
-    position: fixed;
-    top: 60px; /* también respetamos la navbar en landscape */
-    left: 0;
-    width: 100%;
-    height: calc(100vh - 60px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #52c234 0%, #ffd700 100%);
-    z-index: 1;
-    gap: 40px; /* separa el título del canvas */
-  }
-}
-
-/* Media Queries para móviles en portrait */
-@media (max-width: 768px) and (orientation: portrait) {
+/* ===== Responsividad para móviles ===== */
+@media (max-width: 768px) {
   .logoContainer {
     margin-top: 10px;
   }
@@ -143,14 +103,14 @@
   }
 }
 
-/* Media Queries para tablets */
-@media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+/* ===== Responsividad para tablets ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .titulo {
+    font-size: 2.5rem;
+  }
+
   .canvasContainer {
     width: 600px;
     height: 600px;
-  }
-
-  .titulo {
-    font-size: 2.5rem;
   }
 }
