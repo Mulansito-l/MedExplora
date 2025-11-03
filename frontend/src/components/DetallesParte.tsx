@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "./DetallesParte.module.css";
 
 export type BloqueContenido =
@@ -59,11 +60,19 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
           {articulo.contenido.map((bloque, index) => {
             switch (bloque.tipo) {
               case "p":
-                return (
-                  <p key={index} className={styles.parrafo}>
-                    {bloque.texto || bloque.path}
-                  </p>
-                );
+              return (
+                <p key={index} className={styles.parrafo}>
+                  {bloque.texto
+                    ?.split(/\n+/) // separa por saltos de línea
+                    .map((linea, i) => (
+                      <React.Fragment key={i}>
+                        {linea.trim()}
+                        <br />
+                        <br />
+                      </React.Fragment>
+                    ))}
+                </p>
+              );
               case "img":
                 return (
                   <img

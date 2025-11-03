@@ -32,7 +32,7 @@ export default function ModeloHumano() {
         return;
       }
 
-      const response = await fetch(`http://192.168.100.6:1337/api/articulos?filters[id][$eq]=${id}&populate[contenido][populate]=*`);
+      const response = await fetch(`http://localhost:1337/api/articulos?filters[id][$eq]=${id}&populate[contenido][populate]=*`);
 
       if (!response.ok) throw new Error("Error en el servidor");
 

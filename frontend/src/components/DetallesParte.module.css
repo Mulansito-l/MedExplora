@@ -80,11 +80,78 @@
   background: #3a9e1f;
 }
 
+/* 🔸 RICH TEXT */
 .parrafo {
   margin: 1.2rem 0;
   line-height: 1.8;
   font-size: 1.05rem;
   color: #333;
+}
+
+/* Aplica formato al contenido interno generado por Strapi */
+.parrafo p {
+  margin: 1.2rem 0;
+}
+
+.parrafo h1,
+.parrafo h2,
+.parrafo h3 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.parrafo h1 {
+  font-size: 1.8rem;
+}
+
+.parrafo h2 {
+  font-size: 1.5rem;
+}
+
+.parrafo h3 {
+  font-size: 1.3rem;
+}
+
+.parrafo ul,
+.parrafo ol {
+  margin: 1.5rem 0;
+  padding-left: 2rem;
+}
+
+.parrafo ul li,
+.parrafo ol li {
+  margin-bottom: 0.8rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+.parrafo ul li::marker {
+  color: #52c234;
+  font-weight: bold;
+}
+
+.parrafo strong {
+  color: #000;
+  font-weight: 700;
+}
+
+.parrafo em {
+  font-style: italic;
+  color: #555;
+}
+
+.parrafo a {
+  color: #52c234;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.parrafo a:hover {
+  color: #3a9e1f;
+  text-decoration: underline;
 }
 
 .imagen {
