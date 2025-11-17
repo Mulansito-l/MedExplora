@@ -523,6 +523,33 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiGoogleAuthGoogleAuth extends Struct.SingleTypeSchema {
+  collectionName: 'google_auth';
+  info: {
+    displayName: 'GoogleAuth';
+    pluralName: 'google-auths';
+    singularName: 'google-auth';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::google-auth.google-auth'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiPiePie extends Struct.SingleTypeSchema {
   collectionName: 'pies';
   info: {
@@ -1126,6 +1153,7 @@ declare module '@strapi/strapi' {
       'api::brazo.brazo': ApiBrazoBrazo;
       'api::cabeza.cabeza': ApiCabezaCabeza;
       'api::global.global': ApiGlobalGlobal;
+      'api::google-auth.google-auth': ApiGoogleAuthGoogleAuth;
       'api::pie.pie': ApiPiePie;
       'api::pierna.pierna': ApiPiernaPierna;
       'api::torso.torso': ApiTorsoTorso;

@@ -22,6 +22,7 @@
     "@strapi/strapi": "5.27.0",
     "better-sqlite3": "11.3.0",
     "fs-extra": "^10.0.0",
+    "google-auth-library": "^10.5.0",
     "mime-types": "^2.1.27",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

@@ -35,7 +35,7 @@ export default function ModeloHumano() {
       }
 
       const response = await fetch(
-  `http://localhost:1337/api/torso?populate[contenido][populate]=*`
+  `http://192.168.100.6:1337/api/torso?populate[contenido][populate]=*`
 );
 
       if (!response.ok) throw new Error("Error en el servidor");

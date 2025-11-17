@@ -20,7 +20,7 @@ interface DetallesParteProps {
   onVolver?: () => void;
 }
 
-const BASE_URL = "http://localhost:1337";
+const BASE_URL = "http://192.168.100.6:1337";
 
 const toUrl = (u?: string) =>
   u?.startsWith("http") ? u : `${BASE_URL}${u ?? ""}`;
