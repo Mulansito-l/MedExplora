@@ -51,6 +51,10 @@ export interface SharedRichText extends Struct.ComponentSchema {
     icon: 'align-justify';
   };
   attributes: {
+    articulo_gens: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::articulo-gen.articulo-gen'
+    >;
     body: Schema.Attribute.RichText;
   };
 }

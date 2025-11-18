@@ -9,6 +9,11 @@
   "attributes": {
     "body": {
       "type": "richtext"
+    },
+    "articulo_gens": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::articulo-gen.articulo-gen"
     }
   }
 }

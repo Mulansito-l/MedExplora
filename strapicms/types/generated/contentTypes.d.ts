@@ -430,6 +430,39 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiArticuloGenArticuloGen extends Struct.CollectionTypeSchema {
+  collectionName: 'articulo_gens';
+  info: {
+    displayName: 'ArticuloGen';
+    pluralName: 'articulo-gens';
+    singularName: 'articulo-gen';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    contenido: Schema.Attribute.DynamicZone<
+      ['shared.rich-text', 'shared.media', 'shared.referenciado']
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Date: Schema.Attribute.Date;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::articulo-gen.articulo-gen'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.String & Schema.Attribute.Unique;
+    Title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiBrazoBrazo extends Struct.SingleTypeSchema {
   collectionName: 'brazos';
   info: {
@@ -471,7 +504,7 @@ export interface ApiCabezaCabeza extends Struct.SingleTypeSchema {
   };
   attributes: {
     contenido: Schema.Attribute.DynamicZone<
-      ['shared.rich-text', 'shared.media']
+      ['shared.rich-text', 'shared.media', 'shared.referenciado']
     >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -544,6 +577,33 @@ export interface ApiGoogleAuthGoogleAuth extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiOjoOjo extends Struct.SingleTypeSchema {
+  collectionName: 'ojos';
+  info: {
+    displayName: 'Info Ojos';
+    pluralName: 'ojos';
+    singularName: 'ojo';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    contenido: Schema.Attribute.RichText;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::ojo.ojo'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1150,10 +1210,12 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::articulo-gen.articulo-gen': ApiArticuloGenArticuloGen;
       'api::brazo.brazo': ApiBrazoBrazo;
       'api::cabeza.cabeza': ApiCabezaCabeza;
       'api::global.global': ApiGlobalGlobal;
       'api::google-auth.google-auth': ApiGoogleAuthGoogleAuth;
+      'api::ojo.ojo': ApiOjoOjo;
       'api::pie.pie': ApiPiePie;
       'api::pierna.pierna': ApiPiernaPierna;
       'api::torso.torso': ApiTorsoTorso;

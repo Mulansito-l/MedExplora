@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./DetallesParte.module.css";
 import FormattedText from "./FormattedText";
 
@@ -7,7 +7,8 @@ type BloqueContenido =
   | { tipo: "img"; path: string }
   | { tipo: "audio"; path: string }
   | { tipo: "video"; path: string }
-  | { tipo: "l"; elementos: string[] };
+  | { tipo: "l"; elementos: string[] }
+  | { tipo: "sub"; articulo: ArticuloType };
 
 type ArticuloType = {
   titulo: string;
@@ -18,9 +19,10 @@ type ArticuloType = {
 interface DetallesParteProps {
   data: any;
   onVolver?: () => void;
+  onArticuloChange?: (articulo: ArticuloType | null) => void;
 }
 
-const BASE_URL = "http://192.168.100.6:1337";
+const BASE_URL = "http://192.168.100.31:1337";
 
 const toUrl = (u?: string) =>
   u?.startsWith("http") ? u : `${BASE_URL}${u ?? ""}`;
@@ -56,10 +58,7 @@ function transformarData(dataOriginal: any): ArticuloType {
           bloque?.path ??
           "";
         const mime =
-          file?.mime ??
-          file?.[0]?.mime ??
-          file?.data?.attributes?.mime ??
-          "";
+          file?.mime ?? file?.[0]?.mime ?? file?.data?.attributes?.mime ?? "";
 
         if (!url)
           return { tipo: "p", texto: "[Archivo multimedia no disponible]" };
@@ -88,6 +87,28 @@ function transformarData(dataOriginal: any): ArticuloType {
         return { tipo: "l", elementos: items };
       }
 
+      // 🔹 Sub-artículo referenciado (componentes de tipo referencia)
+      case "shared.article":
+      case "shared.subarticle":
+      case "shared.reference": {
+        // Strapi puede devolver la referencia en varias formas: bloque.articulo, bloque.referencia, bloque.entry, etc.
+        const ref =
+          bloque?.articulo ??
+          bloque?.referencia ??
+          bloque?.entry ??
+          bloque?.article ??
+          null;
+        const refData = ref?.data ?? ref ?? null;
+        const referenced = Array.isArray(refData) ? refData[0] : refData;
+        if (!referenced)
+          return { tipo: "p", texto: "[Referencia no disponible]" };
+
+        // referenced puede tener la forma { attributes: { ... } } o ser ya el objeto artículo
+        const entry = referenced.attributes ?? referenced;
+        const subArticulo = transformarData(entry);
+        return { tipo: "sub", articulo: subArticulo };
+      }
+
       // 🔹 Por defecto
       default:
         return { tipo: "p", texto: "[Elemento no soportado]" };
@@ -97,8 +118,61 @@ function transformarData(dataOriginal: any): ArticuloType {
   return { titulo, fechaPublicacion, contenido };
 }
 
-export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
+export default function DetallesParte({
+  data,
+  onArticuloChange,
+  onVolver,
+}: DetallesParteProps) {
+  const [showAnimation, setShowAnimation] = useState(false);
   let articulo: ArticuloType;
+
+  // Efecto para manejar la animación cuando cambia el data
+  useEffect(() => {
+    // Primero ocultamos con animación
+    setShowAnimation(false);
+
+    // Después de un pequeño delay, mostramos con animación
+    const timer = setTimeout(() => {
+      setShowAnimation(true);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [data]); // Se ejecuta cada vez que cambia el data
+
+  // Función que maneja los clics en ==slug==
+  const handleSlugClick = async (slug: string) => {
+    console.log("Slug clickeado:", slug);
+
+    try {
+      const response = await fetch(
+        `http://192.168.100.31:1337/api/articulo-gens?filters[slug][$eq]=${slug}&populate=*`
+      );
+      const data = await response.json();
+
+      console.log("Respuesta completa de la API:", data);
+
+      if (data.data && data.data.length > 0) {
+        const articuloEncontrado = data.data[0];
+        console.log("Artículo encontrado:", articuloEncontrado);
+
+        // Activar animación de cambio
+        setShowAnimation(false);
+
+        setTimeout(() => {
+          if (onArticuloChange) {
+            onArticuloChange(data.data[0]);
+          }
+          setShowAnimation(true);
+        }, 150);
+      } else {
+        alert(`No se encontró ningún artículo con el slug: ${slug}`);
+      }
+    } catch (error) {
+      console.error("Error al buscar el artículo:", error);
+      alert("Error al buscar el artículo");
+    }
+  };
+
   try {
     articulo = transformarData(data);
   } catch (e) {
@@ -112,7 +186,11 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
   }
 
   return (
-    <div className={styles.articuloFull}>
+    <div
+      className={`${styles.articuloFull} ${
+        showAnimation ? styles.detallesEnter : styles.detallesExit
+      }`}
+    >
       <div className={styles.contenedor}>
         <div className={styles.header}>
           <h1 className={styles.titulo}>{articulo.titulo}</h1>
@@ -131,7 +209,10 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
               case "p":
                 return (
                   <div key={index} className={styles.parrafo}>
-                    <FormattedText text={bloque.texto ?? ""} />
+                    <FormattedText
+                      text={bloque.texto ?? ""}
+                      onInternalLinkClick={handleSlugClick}
+                    />
                   </div>
                 );
               case "img":
@@ -150,7 +231,7 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
                     Tu navegador no soporta el audio.
                   </audio>
                 );
-             case "video":
+              case "video":
                 return (
                   <div key={index} className={styles.videoContainer}>
                     <video controls>

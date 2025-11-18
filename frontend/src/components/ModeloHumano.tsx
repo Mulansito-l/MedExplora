@@ -35,8 +35,8 @@ export default function ModeloHumano() {
       }
 
       const response = await fetch(
-  `http://192.168.100.6:1337/api/torso?populate[contenido][populate]=*`
-);
+        `http://192.168.100.31:1337/api/${endpoint}?populate[contenido][populate]=*`
+      );
 
       if (!response.ok) throw new Error("Error en el servidor");
       //const data = await response.json();
@@ -55,7 +55,11 @@ export default function ModeloHumano() {
     <>
       <MobileDebugPanel />
       {articulo && (
-        <DetallesParte data={articulo} onVolver={() => setArticulo(null)} />
+        <DetallesParte
+          data={articulo}
+          onArticuloChange={setArticulo}
+          onVolver={() => setArticulo(null)}
+        />
       )}
 
       <div
