@@ -1,23 +1,76 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./FormattedText.module.css";
 
 interface FormattedTextProps {
   text: string;
+  onInternalLinkClick?: (slug: string) => void;
 }
 
 /**
- * Parser Markdown extendido:
- * - Encabezados (#)
- * - Negrita, cursiva, subrayado, tachado
- * - Listas, citas, código
- * - Imágenes (![alt](url))
- * - Audio (!audio(url))
- * - Video (!video(url))
- * - Enlaces [texto](https://...)
+ * Parser Markdown extendido con soporte para enlaces internos por slug
+ * y ==slug== para enlaces clickeables
  */
-export default function FormattedText({ text }: FormattedTextProps) {
+export default function FormattedText({
+  text,
+  onInternalLinkClick,
+}: FormattedTextProps) {
+  useEffect(() => {
+    const handleLinkClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest("a");
+      const slugLink = target.closest(".slug-link");
+
+      // Manejar enlaces markdown [texto](slug)
+      if (link && link.href && onInternalLinkClick) {
+        const href = link.getAttribute("href") || "";
+
+        // Solo procesar si es un enlace interno (NO http, https, #)
+        if (
+          !href.startsWith("http") &&
+          !href.startsWith("https") &&
+          !href.startsWith("#") &&
+          href.trim() !== ""
+        ) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          // El href es directamente el slug
+          const slug = href.trim();
+          console.log("Slug detectado:", slug);
+          onInternalLinkClick(slug);
+        }
+        // Los enlaces externos (http/https) y anclas (#) se comportan normalmente
+      }
+
+      // Manejar enlaces ==slug==
+      if (slugLink && onInternalLinkClick) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const slug = slugLink.getAttribute("data-slug");
+        if (slug) {
+          console.log("Slug detectado (== ==):", slug);
+          onInternalLinkClick(slug);
+        }
+      }
+    };
+
+    document.addEventListener("click", handleLinkClick);
+
+    return () => {
+      document.removeEventListener("click", handleLinkClick);
+    };
+  }, [onInternalLinkClick]);
+
   const parseMarkdown = (input: string): string => {
     let html = input;
+
+    // --- NUEVO: ENLACES ==slug== ---
+    // Convierte ==ojosinfo== en un span clickeable
+    html = html.replace(
+      /==(.*?)==/gim,
+      '<span class="slug-link" data-slug="$1" style="color: blue; text-decoration: underline; cursor: pointer;">$1</span>'
+    );
 
     // --- BLOQUES DE CÓDIGO ---
     html = html.replace(/```([\s\S]*?)```/gim, "<pre><code>$1</code></pre>");
@@ -36,11 +89,11 @@ export default function FormattedText({ text }: FormattedTextProps) {
 
     // --- FORMATO DE TEXTO ---
     html = html
-      .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>") // **negrita**
-      .replace(/_([^_]+)_/gim, "<em>$1</em>") // _cursiva_
-      .replace(/\*(.*?)\*/gim, "<em>$1</em>") // *cursiva*
-      .replace(/__(.*?)__/gim, "<u>$1</u>") // __subrayado__
-      .replace(/~~(.*?)~~/gim, "<s>$1</s>"); // ~~tachado~~
+      .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
+      .replace(/_([^_]+)_/gim, "<em>$1</em>")
+      .replace(/\*(.*?)\*/gim, "<em>$1</em>")
+      .replace(/__(.*?)__/gim, "<u>$1</u>")
+      .replace(/~~(.*?)~~/gim, "<s>$1</s>");
 
     // --- CITAS ---
     html = html.replace(/^\s*>\s*(.*$)/gim, "<blockquote>$1</blockquote>");
@@ -51,14 +104,12 @@ export default function FormattedText({ text }: FormattedTextProps) {
     html = html.replace(/^\s*[-*•]\s+(.*$)/gim, "<ul><li>$1</li></ul>");
 
     // --- IMÁGENES ---
-    // Detecta: ![texto](url)
     html = html.replace(
       /!\[([^\]]*)\]\(([^)]+)\)/gim,
       `<img src="$2" alt="$1" class="markdown-img" />`
     );
 
     // --- AUDIO ---
-    // Detecta: !audio(/uploads/audio.mp3)
     html = html.replace(
       /!audio\((.*?)\)/gim,
       `<audio controls class="markdown-audio">
@@ -68,7 +119,6 @@ export default function FormattedText({ text }: FormattedTextProps) {
     );
 
     // --- VIDEO ---
-    // Detecta: !video(/uploads/video.mp4)
     html = html.replace(
       /!video\((.*?)\)/gim,
       `<video controls class="markdown-video">
@@ -78,11 +128,27 @@ export default function FormattedText({ text }: FormattedTextProps) {
     );
 
     // --- ENLACES ---
-    // Detecta: [texto](https://url)
-    // El (?<!!) evita interferir con ![imagen](url)
+    // Enlaces externos: [texto](https://url)
     html = html.replace(
       /(?<!!)\[(.*?)\]\((https?:\/\/[^\s)]+)\)/gim,
-      '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+      '<a href="$2" target="_blank" rel="noopener noreferrer" class="external-link">$1</a>'
+    );
+
+    // Enlaces internos por slug: [texto](slug-del-articulo)
+    html = html.replace(
+      /(?<!!)\[(.*?)\]\(([^#\s)]+)\)/gim,
+      (match, linkText, href) => {
+        // Si NO es una URL externa y NO es un ancla, es un enlace interno
+        if (
+          !href.startsWith("http") &&
+          !href.startsWith("https") &&
+          !href.startsWith("#") &&
+          href.trim() !== ""
+        ) {
+          return `<a href="${href}" class="internal-link" data-slug="${href}">${linkText}</a>`;
+        }
+        return match;
+      }
     );
 
     // --- LIMPIEZA DE LISTAS REPETIDAS ---

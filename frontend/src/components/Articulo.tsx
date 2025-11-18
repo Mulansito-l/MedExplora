@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./DetallesParte.module.css"; // asegúrate de tener este archivo
+import styles from "./DetallesParte.module.css";
 import FormattedText from "./FormattedText";
 
 type BloqueContenido =
@@ -13,24 +13,29 @@ type ArticuloType = {
   titulo: string;
   fechaPublicacion: string;
   contenido: BloqueContenido[];
+  slug?: string;
 };
 
 interface DetallesParteProps {
   data: any;
   onVolver?: () => void;
+  onCargarArticulo?: (slug: string) => void; // Nueva prop
 }
 
-const BASE_URL = "http://localhost:1337";
+const BASE_URL = "http://192.168.100.31:1337";
 
-const toUrl = (u?: string) => (u?.startsWith("http") ? u : `${BASE_URL}${u ?? ""}`);
+const toUrl = (u?: string) =>
+  u?.startsWith("http") ? u : `${BASE_URL}${u ?? ""}`;
 
 function transformarData(dataOriginal: any): ArticuloType {
-  const articulo = Array.isArray(dataOriginal) && dataOriginal.length > 0
-    ? dataOriginal[0]
-    : {};
+  const articulo =
+    Array.isArray(dataOriginal) && dataOriginal.length > 0
+      ? dataOriginal[0]
+      : {};
 
   const titulo = articulo?.Title ?? "Sin título";
   const fechaPublicacion = articulo?.Date ?? new Date().toISOString();
+  const slug = articulo?.slug ?? articulo?.Slug;
 
   const contenidoCrudo: any[] = Array.isArray(articulo?.contenido)
     ? articulo.contenido
@@ -45,7 +50,9 @@ function transformarData(dataOriginal: any): ArticuloType {
 
       case "shared.media": {
         const url = bloque?.file?.url ?? bloque?.path;
-        return url ? { tipo: "img", path: toUrl(url) } : { tipo: "p", texto: "[Imagen no disponible]" };
+        return url
+          ? { tipo: "img", path: toUrl(url) }
+          : { tipo: "p", texto: "[Imagen no disponible]" };
       }
 
       case "shared.audio": {
@@ -72,9 +79,12 @@ function transformarData(dataOriginal: any): ArticuloType {
           : { tipo: "p", texto: "[Video no disponible]" };
       }
 
-
       case "shared.list": {
-        const items: string[] = Array.isArray(bloque?.items) ? bloque.items : (Array.isArray(bloque?.elementos) ? bloque.elementos : []);
+        const items: string[] = Array.isArray(bloque?.items)
+          ? bloque.items
+          : Array.isArray(bloque?.elementos)
+          ? bloque.elementos
+          : [];
         return { tipo: "l", elementos: items };
       }
 
@@ -83,10 +93,14 @@ function transformarData(dataOriginal: any): ArticuloType {
     }
   });
 
-  return { titulo, fechaPublicacion, contenido };
+  return { titulo, fechaPublicacion, contenido, slug };
 }
 
-export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
+export default function DetallesParte({
+  data,
+  onVolver,
+  onCargarArticulo,
+}: DetallesParteProps) {
   let articulo: ArticuloType;
   try {
     articulo = transformarData(data);
@@ -94,9 +108,18 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
     articulo = {
       titulo: "Error al cargar",
       fechaPublicacion: new Date().toISOString(),
-      contenido: [{ tipo: "p", texto: "Hubo un problema al parsear el contenido." }],
+      contenido: [
+        { tipo: "p", texto: "Hubo un problema al parsear el contenido." },
+      ],
     };
   }
+
+  const handleInternalLinkClick = (slug: string) => {
+    if (onCargarArticulo) {
+      console.log("Solicitando carga de artículo con slug:", slug);
+      onCargarArticulo(slug);
+    }
+  };
 
   return (
     <div className={styles.articuloFull}>
@@ -118,11 +141,21 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
               case "p":
                 return (
                   <div key={index} className={styles.parrafo}>
-                    <FormattedText text={bloque.texto ?? ""} />
+                    <FormattedText
+                      text={bloque.texto ?? ""}
+                      onInternalLinkClick={handleInternalLinkClick}
+                    />
                   </div>
                 );
               case "img":
-                return <img key={index} src={bloque.path} alt="" className={styles.imagen} />;
+                return (
+                  <img
+                    key={index}
+                    src={bloque.path}
+                    alt=""
+                    className={styles.imagen}
+                  />
+                );
               case "audio":
                 return (
                   <audio key={index} controls className={styles.media}>
@@ -140,7 +173,9 @@ export default function DetallesParte({ data, onVolver }: DetallesParteProps) {
               case "l":
                 return (
                   <ul key={index} className={styles.lista}>
-                    {bloque.elementos.map((el, i) => <li key={i}>{el}</li>)}
+                    {bloque.elementos.map((el, i) => (
+                      <li key={i}>{el}</li>
+                    ))}
                   </ul>
                 );
               default:
