@@ -1,10 +1,10 @@
 {
-  "kind": "singleType",
-  "collectionName": "cabezas",
+  "kind": "collectionType",
+  "collectionName": "articulo_gens",
   "info": {
-    "singularName": "cabeza",
-    "pluralName": "cabezas",
-    "displayName": "Cabeza"
+    "singularName": "articulo-gen",
+    "pluralName": "articulo-gens",
+    "displayName": "ArticuloGen"
   },
   "options": {
     "draftAndPublish": true
@@ -24,6 +24,10 @@
         "shared.media",
         "shared.referenciado"
       ]
+    },
+    "slug": {
+      "type": "string",
+      "unique": true
     }
   }
 }

@@ -61,7 +61,11 @@ const ModeloHumano = forwardRef<ModeloHumanoHandles>((props, ref) => {
     <>
       <MobileDebugPanel />
       {articulo && (
-        <DetallesParte data={articulo} onVolver={() => setArticulo(null)} />
+        <DetallesParte
+          data={articulo}
+          onArticuloChange={setArticulo}
+          onVolver={() => setArticulo(null)}
+        />
       )}
 
       <div
