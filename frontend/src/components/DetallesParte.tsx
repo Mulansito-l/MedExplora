@@ -145,7 +145,7 @@ export default function DetallesParte({
 
     try {
       const response = await fetch(
-        `http://192.168.100.31:1337/api/articulo-gens?filters[slug][$eq]=${slug}&populate=*`
+        `http://192.168.56.1:1337/api/articulo-gens?filters[slug][$eq]=${slug}&populate[contenido][populate]=*`
       );
       const data = await response.json();
 
