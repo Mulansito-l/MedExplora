@@ -1,15 +1,18 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { Suspense, useState, useRef } from "react";
+import { Suspense, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import Modelo3D from "./Modelo3D";
 import DetallesParte from "./DetallesParte";
 import MobileDebugPanel from "./MobileDebugPanel";
 import type { ArticuloType } from "./DetallesParte";
-import { fetchArticuloById } from "../services/articulo";
 import styles from "./ModeloHumano.module.css";
-import type { RGBA_ASTC_5x4_Format } from "three";
 
-export default function ModeloHumano() {
+// Exporta la interfaz
+export interface ModeloHumanoHandles {
+  handleParteClick: (partName: string) => void;
+}
+
+const ModeloHumano = forwardRef<ModeloHumanoHandles>((props, ref) => {
   const [articulo, setArticulo] = useState<ArticuloType | null>(null);
   const controlsRef = useRef<any>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -23,7 +26,7 @@ export default function ModeloHumano() {
         Cabeza: "cabeza",
         Brazos: "brazo",
         Torso: "torso",
-        Piernas: "pierna",
+        Piernas: "pierna", 
         Pies: "pie",
       };
 
@@ -34,22 +37,25 @@ export default function ModeloHumano() {
         return;
       }
 
+      // CORREGIDO: Usar el endpoint dinámico en lugar de siempre "torso"
       const response = await fetch(
-        `http://192.168.100.31:1337/api/${endpoint}?populate[contenido][populate]=*`
+        `http://192.168.56.1:1337/api/${endpoint}?populate[contenido][populate]=*`
       );
 
       if (!response.ok) throw new Error("Error en el servidor");
-      //const data = await response.json();
+      
       const data = await response.json();
-
-      // En Strapi, `data.data` normalmente es un array, por eso se asigna
       setArticulo(data.data);
-      //console.log("Artículo cargado:", data.data[0]);
       console.log("Respuesta completa del servidor:", data);
     } catch (err) {
       console.error("Error fetching artículo:", err);
     }
   };
+
+  // Exponer la función handleClick al componente padre
+  useImperativeHandle(ref, () => ({
+    handleParteClick: handleClick
+  }));
 
   return (
     <>
@@ -106,4 +112,6 @@ export default function ModeloHumano() {
       </div>
     </>
   );
-}
+});
+
+export default ModeloHumano;

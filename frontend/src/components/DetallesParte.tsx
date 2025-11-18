@@ -22,7 +22,7 @@ interface DetallesParteProps {
   onArticuloChange?: (articulo: ArticuloType | null) => void;
 }
 
-const BASE_URL = "http://192.168.100.31:1337";
+const BASE_URL = "http://192.168.56.1:1337";
 
 const toUrl = (u?: string) =>
   u?.startsWith("http") ? u : `${BASE_URL}${u ?? ""}`;
