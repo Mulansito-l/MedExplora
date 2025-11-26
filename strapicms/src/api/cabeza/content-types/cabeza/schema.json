@@ -1,0 +1,29 @@
+{
+  "kind": "singleType",
+  "collectionName": "cabezas",
+  "info": {
+    "singularName": "cabeza",
+    "pluralName": "cabezas",
+    "displayName": "Cabeza"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Date": {
+      "type": "date"
+    },
+    "contenido": {
+      "type": "dynamiczone",
+      "components": [
+        "shared.rich-text",
+        "shared.media",
+        "shared.referenciado"
+      ]
+    }
+  }
+}

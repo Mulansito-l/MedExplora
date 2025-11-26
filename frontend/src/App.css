@@ -1,38 +1,90 @@
-.App {
+/* Reset ligero */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+/* Contenedor principal */
+div {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+/* Título */
+h1 {
+  font-size: 2.2em;
+  color: #1a1a1a;
   text-align: center;
+  margin-bottom: 10px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Fecha */
+em {
+  display: block;
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* Párrafos */
+p {
+  font-size: 1.05em;
+  margin-bottom: 20px;
+}
+
+/* Imágenes */
+img {
+  display: block;
+  margin: 20px auto;
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Listas */
+ul {
+  padding-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+ul li {
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 12px;
+}
+
+ul li::before {
+  content: "•";
+  color: #007acc;
+  position: absolute;
+  left: 0;
+}
+
+/* Bloques de contenido opcionales */
+.contenido-block {
+  margin-bottom: 25px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  div {
+    padding: 20px;
   }
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  h1 {
+    font-size: 1.8em;
   }
-  to {
-    transform: rotate(360deg);
+
+  p {
+    font-size: 1em;
   }
 }

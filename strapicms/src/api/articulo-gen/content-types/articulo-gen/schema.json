@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "articulo_gens",
+  "info": {
+    "singularName": "articulo-gen",
+    "pluralName": "articulo-gens",
+    "displayName": "ArticuloGen"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Date": {
+      "type": "date"
+    },
+    "contenido": {
+      "type": "dynamiczone",
+      "components": [
+        "shared.rich-text",
+        "shared.media",
+        "shared.referenciado"
+      ]
+    },
+    "slug": {
+      "type": "string",
+      "unique": true
+    }
+  }
+}
